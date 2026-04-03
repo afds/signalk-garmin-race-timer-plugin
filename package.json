@@ -1,0 +1,27 @@
+{
+  "name": "signalk-garmin-race-timer",
+  "version": "1.0.0",
+  "description": "Signal K plugin that converts Garmin Race Timer NMEA 2000 data to SignalK racing paths",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "mocha --exit"
+  },
+  "keywords": [
+    "signalk-node-server-plugin",
+    "signalk-category-nmea-2000"
+  ],
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@signalk/server-api": "^1.39.0"
+  },
+  "devDependencies": {
+    "@canboat/canboatjs": "^3.3.0",
+    "@types/debug": "^4.1.13",
+    "@types/node": "^14.14.10",
+    "chai": "^4.1.2",
+    "mocha": "^5.0.0",
+    "typescript": "^4.1.2"
+  }
+}
