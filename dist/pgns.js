@@ -1,7 +1,7 @@
 "use strict";
 // Garmin Race Timer PGN definition for canboatjs v3
 // Handles 39-byte type 0x0002 timer data messages (1Hz broadcast)
-// Adapted from /home/afds/Projects/Boat/canboatjs/garmin_race_timer_pgn.js
+// Garmin Race Timer PGN 126720 field definitions
 module.exports = {
     PGNs: [
         {
