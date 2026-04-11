@@ -46,6 +46,10 @@ npm run watch    # compile on change
 npm test         # run tests
 ```
 
+## Disclaimer
+
+This project is not affiliated with, endorsed by, or associated with Garmin or its subsidiaries. "Garmin" is a registered trademark of Garmin. This plugin is an independent, unofficial project provided for demonstration purposes only. Use at your own risk.
+
 ## License
 
 Apache-2.0
