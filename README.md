@@ -1,4 +1,4 @@
-# signalk-garmin-race-timer
+# signalk-garmin-race-timer-plugin
 
 Signal K server plugin that decodes Garmin Race Timer broadcasts from NMEA 2000 (PGN 126720, manufacturer code 229) and publishes them as Signal K racing data.
 
