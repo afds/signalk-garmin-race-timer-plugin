@@ -25,19 +25,6 @@ Signal K server plugin that decodes Garmin Race Timer broadcasts from NMEA 2000 
 
 `GET /plugins/signalk-garmin-race-timer/state` returns the current timer state as JSON.
 
-## Installation
-
-```bash
-# From the plugin directory
-npm install && npm run build
-npm link
-
-# In your Signal K server config directory (~/.signalk/)
-npm link signalk-garmin-race-timer
-```
-
-Then enable the plugin in the Signal K admin UI under Server > Plugin Config.
-
 ## Development
 
 ```bash
