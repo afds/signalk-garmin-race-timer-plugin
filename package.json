@@ -21,7 +21,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@signalk/server-api": "^1.39.0"
+    "@signalk/server-api": "^2.24.0"
   },
   "devDependencies": {
     "@canboat/canboatjs": "^3.3.0",
