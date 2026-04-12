@@ -15,6 +15,10 @@
   "signalk": {
     "displayName": "Garmin Race Timer"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/afds/signalk-garmin-race-timer-plugin.git"
+  },
   "license": "Apache-2.0",
   "dependencies": {
     "@signalk/server-api": "^1.39.0"
