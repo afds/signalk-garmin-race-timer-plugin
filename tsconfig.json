@@ -6,7 +6,8 @@
     "rootDir": "src",
     "outDir": "./dist",
     "strict": true,
-    "allowJs": true
+    "allowJs": true,
+    "types": ["node"]
   },
   "include": ["./src/**/*"]
 }
