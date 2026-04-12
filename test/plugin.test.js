@@ -36,7 +36,7 @@ describe('PGN parsing', function () {
     })
     fromPgn = new FromPgn({
       onPropertyValues: propertyValues.onPropertyValues.bind(propertyValues),
-      useCamelCompat: true  // matches SignalK server default; exposes both Id and Name as field keys
+      useCamelCompat: true  // matches Signal K server default; exposes both Id and Name as field keys
     })
   })
 

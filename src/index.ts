@@ -309,7 +309,7 @@ export default function (app: any) {
     id: PLUGIN_ID,
     name: 'Garmin Race Timer',
     description:
-      'Converts Garmin Race Timer NMEA 2000 data to SignalK racing paths',
+      'Converts Garmin Race Timer NMEA 2000 data to Signal K racing paths',
     schema: {
       type: 'object',
       properties: {}

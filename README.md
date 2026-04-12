@@ -4,7 +4,7 @@ Signal K server plugin that decodes Garmin Race Timer broadcasts from NMEA 2000 
 
 > **Note:** This plugin is read-only. It decodes race timer data broadcast by a physical Garmin race timer device over NMEA 2000. The device operator must start and control the race countdown on the hardware — this plugin cannot initiate or modify the timer.
 
-## SignalK Paths
+## Signal K Paths
 
 | Path | Type | Units | Description |
 |---|---|---|---|

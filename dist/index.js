@@ -268,7 +268,7 @@ function default_1(app) {
         },
         id: PLUGIN_ID,
         name: 'Garmin Race Timer',
-        description: 'Converts Garmin Race Timer NMEA 2000 data to SignalK racing paths',
+        description: 'Converts Garmin Race Timer NMEA 2000 data to Signal K racing paths',
         schema: {
             type: 'object',
             properties: {}
