@@ -1,10 +1,6 @@
-import createDebugFn from 'debug'
-
 const pgnDefinitions = require('./pgns')
 
 const PLUGIN_ID = 'signalk-garmin-race-timer'
-const debug = createDebugFn(PLUGIN_ID)
-const debugN2k = createDebugFn(`${PLUGIN_ID}:n2k`)
 
 // Garmin timer status codes
 const STATUS_RACE_RUNNING = 0
@@ -79,31 +75,31 @@ export default function (app: any) {
         ]
       }]
     })
-    debug('Published path metadata')
+    app.debug('Published path metadata')
   }
 
   function handleParsedPgn(pgnData: any) {
     if (pgnData.pgn !== 126720) return
 
     const f = pgnData.fields
-    debugN2k('PGN 126720 received: %j', f)
+    app.debug('[n2k] PGN 126720 received: %j', f)
 
     if (!f) {
-      debugN2k('Skipping: no fields')
+      app.debug('[n2k] Skipping: no fields')
       return
     }
 
     // Filter for Garmin timer data messages
     if (f['Sub-command'] !== 254) {
-      debugN2k('Skipping: Sub-command=%d (want 254)', f['Sub-command'])
+      app.debug('[n2k] Skipping: Sub-command=%d (want 254)', f['Sub-command'])
       return
     }
     if (f['Message Type'] !== 2) {
-      debugN2k('Skipping: Message Type=%d (want 2)', f['Message Type'])
+      app.debug('[n2k] Skipping: Message Type=%d (want 2)', f['Message Type'])
       return
     }
     if (f['Timer Data Type'] !== 5) {
-      debugN2k('Skipping: Timer Data Type=%d (want 5)', f['Timer Data Type'])
+      app.debug('[n2k] Skipping: Timer Data Type=%d (want 5)', f['Timer Data Type'])
       return
     }
 
@@ -111,13 +107,13 @@ export default function (app: any) {
     const timerStatus: number = f['Timer Status']
 
     if (timerValueMs === undefined || timerStatus === undefined) {
-      debugN2k('Skipping: Timer Value or Timer Status missing')
+      app.debug('[n2k] Skipping: Timer Value or Timer Status missing')
       return
     }
 
     const statusName = STATUS_NAMES[timerStatus]
     if (!statusName) {
-      debug('Unknown timer status: %d', timerStatus)
+      app.debug('Unknown timer status: %d', timerStatus)
       return
     }
 
@@ -137,7 +133,7 @@ export default function (app: any) {
         lastCountdownPausedValueMs !== null &&
         timerValueMs > lastCountdownPausedValueMs
       if (isReset) {
-        debug('Countdown reset detected: %dms → %dms', lastCountdownPausedValueMs, timerValueMs)
+        app.debug('Countdown reset detected: %dms → %dms', lastCountdownPausedValueMs, timerValueMs)
       }
 
       if (timerStatus === STATUS_COUNTDOWN_PAUSED) {
@@ -162,7 +158,7 @@ export default function (app: any) {
       // Detect countdown→race transition (race start)
       if (lastStatus !== null && isCountdown(lastStatus) && timerStatus === STATUS_RACE_RUNNING) {
         lockedStartTime = new Date(now - timerValueMs).toISOString()
-        debug('Race started at %s', lockedStartTime)
+        app.debug('Race started at %s', lockedStartTime)
         emitRaceStartNotification()
       }
 
@@ -174,7 +170,7 @@ export default function (app: any) {
       // Detect race→raceFinished transition
       if (lastStatus === STATUS_RACE_RUNNING && timerStatus === STATUS_RACE_PAUSED) {
         lockedFinishTime = new Date(now).toISOString()
-        debug('Race finished at %s (elapsed %ds)', lockedFinishTime, timeSeconds)
+        app.debug('Race finished at %s (elapsed %ds)', lockedFinishTime, timeSeconds)
         clearNotification('raceStart')
         emitRaceFinishNotification(timeSeconds)
       }
@@ -182,7 +178,7 @@ export default function (app: any) {
       // Clear finishTime if race resumes
       if (lastStatus === STATUS_RACE_PAUSED && timerStatus === STATUS_RACE_RUNNING) {
         lockedFinishTime = null
-        debug('Race resumed, clearing finishTime')
+        app.debug('Race resumed, clearing finishTime')
         clearNotification('raceFinish')
       }
 
@@ -205,7 +201,7 @@ export default function (app: any) {
       lastUpdate: new Date(now).toISOString()
     }
 
-    debug('Publishing: status=%s timerValue=%dms', statusName, timerValueMs)
+    app.debug('Publishing: status=%s timerValue=%dms', statusName, timerValueMs)
     app.handleMessage(PLUGIN_ID, { updates: [{ values }] })
   }
 
@@ -268,14 +264,14 @@ export default function (app: any) {
       lastCountdownPausedValueMs = null
 
       app.emitPropertyValue('canboat-custom-pgns', pgnDefinitions)
-      debug('Registered Garmin Race Timer PGN definition')
+      app.debug('Registered Garmin Race Timer PGN definition')
 
       n2kHandler = handleParsedPgn
       app.on('N2KAnalyzerOut', n2kHandler)
-      debug('Subscribed to N2KAnalyzerOut')
+      app.debug('Subscribed to N2KAnalyzerOut')
 
       publishMeta()
-      debug('Plugin started')
+      app.debug('Plugin started')
     },
 
     stop: function () {
@@ -297,7 +293,7 @@ export default function (app: any) {
         status: null,
         lastUpdate: null
       }
-      debug('Plugin stopped')
+      app.debug('Plugin stopped')
     },
 
     registerWithRouter: function (router: any) {
