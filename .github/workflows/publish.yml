@@ -45,5 +45,5 @@ jobs:
           git add package.json package-lock.json
           git commit -m "v$VERSION"
           git push origin "$BRANCH"
-          gh pr create --title "v$VERSION" --body "Automated version bump after npm publish." --base main --head "$BRANCH"
+          gh pr create --title "Bump version to v$VERSION" --body "Automated version bump after npm publish." --base main --head "$BRANCH"
           gh pr merge "$BRANCH" --auto --squash
