@@ -50,12 +50,12 @@ module.exports = {
         },
         {
           Order: 4,
-          Id: "subCommand",
-          Name: "Sub-command",
-          Description: "0xfe = data exchange, 0xe7 = heartbeat, 0xfd = periodic broadcast",
+          Id: "command",
+          Name: "Command",
           BitLength: 8,
           BitOffset: 16,
           BitStart: 0,
+          Match: 254, // 0xFE = data exchange. Match is required so canboatjs selects this definition when other plugins also register PGN 126720 with competing Match values on the same field.
           FieldType: "NUMBER",
           Resolution: 1,
           Signed: false

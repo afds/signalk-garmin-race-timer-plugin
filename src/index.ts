@@ -90,8 +90,8 @@ export default function (app: any) {
     }
 
     // Filter for Garmin timer data messages
-    if (f['Sub-command'] !== 254) {
-      app.debug('[n2k] Skipping: Sub-command=%d (want 254)', f['Sub-command'])
+    if (f['Command'] !== 254) {
+      app.debug('[n2k] Skipping: Command=%d (want 254)', f['Command'])
       return
     }
     if (f['Message Type'] !== 2) {

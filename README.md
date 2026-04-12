@@ -21,6 +21,22 @@ Signal K server plugin that decodes Garmin Race Timer broadcasts from NMEA 2000 
 | `notifications.navigation.racing.raceStart` | Countdown-to-race transition (race begins) | Race finishes or new countdown starts |
 | `notifications.navigation.racing.raceFinish` | Race-to-finished transition (timer stopped during race). Includes elapsed time in message. | Race resumes or new countdown starts |
 
+## NMEA 2000 Data
+
+The plugin registers a custom canboatjs definition for **PGN 126720** (Garmin proprietary, manufacturer code 229). It listens for 39-byte "data exchange" messages (command byte `0xFE`) with message type `0x0002` (timer data), broadcast at 1 Hz by the race timer device.
+
+Relevant fields extracted from each message:
+
+| Field | Bits | Description |
+|---|---|---|
+| Command | 8 | `0xFE` — data exchange (filtered; heartbeat `0xE7` and others are ignored) |
+| Message Type | 16 | `0x0002` — timer data (filtered; keepalive `0x0007` and others are ignored) |
+| Timer Data Type | 8 | `0x05` — time data |
+| Timer Value | 32 | Milliseconds — countdown remaining or elapsed race time, depending on status |
+| Timer Status | 8 | `0` = race running, `1` = countdown running, `2` = race paused (finished), `3` = countdown paused |
+
+The full field layout is defined in [`src/pgns.js`](src/pgns.js).
+
 ## REST API
 
 `GET /plugins/signalk-garmin-race-timer/state` returns the current timer state as JSON.

@@ -47,7 +47,7 @@ describe('PGN parsing', function () {
     expect(pgn.fields['Timer Data Type']).to.equal(5)
     expect(pgn.fields['Timer Value']).to.equal(600000)
     expect(pgn.fields['Timer Status']).to.equal(1)
-    expect(pgn.fields['Sub-command']).to.equal(254)
+    expect(pgn.fields['Command']).to.equal(254)
     expect(pgn.fields['Message Type']).to.equal(2)
   })
 
@@ -83,7 +83,7 @@ function makePgn(timerValueMs, timerStatus) {
     pgn: 126720,
     fields: {
       'Manufacturer Code': 229,
-      'Sub-command': 254,
+      'Command': 254,
       'Message Type': 2,
       'Timer Data Type': 5,
       'Timer Value': timerValueMs,
@@ -465,7 +465,7 @@ describe('Plugin callback logic', function () {
   it('ignores messages with wrong sub-command', function () {
     mockApp.emit('N2KAnalyzerOut', {
       pgn: 126720,
-      fields: { 'Sub-command': 231, 'Message Type': 2, 'Timer Data Type': 5, 'Timer Value': 600000, 'Timer Status': 1 }
+      fields: { 'Command': 231, 'Message Type': 2, 'Timer Data Type': 5, 'Timer Value': 600000, 'Timer Status': 1 }
     })
     expect(deltas).to.have.lengthOf(0)
   })
@@ -473,7 +473,7 @@ describe('Plugin callback logic', function () {
   it('ignores messages with wrong message type', function () {
     mockApp.emit('N2KAnalyzerOut', {
       pgn: 126720,
-      fields: { 'Sub-command': 254, 'Message Type': 3, 'Timer Data Type': 5, 'Timer Value': 600000, 'Timer Status': 1 }
+      fields: { 'Command': 254, 'Message Type': 3, 'Timer Data Type': 5, 'Timer Value': 600000, 'Timer Status': 1 }
     })
     expect(deltas).to.have.lengthOf(0)
   })
@@ -481,7 +481,7 @@ describe('Plugin callback logic', function () {
   it('ignores messages with wrong timer data type', function () {
     mockApp.emit('N2KAnalyzerOut', {
       pgn: 126720,
-      fields: { 'Sub-command': 254, 'Message Type': 2, 'Timer Data Type': 3, 'Timer Value': 600000, 'Timer Status': 1 }
+      fields: { 'Command': 254, 'Message Type': 2, 'Timer Data Type': 3, 'Timer Value': 600000, 'Timer Status': 1 }
     })
     expect(deltas).to.have.lengthOf(0)
   })
@@ -530,7 +530,7 @@ describe('REST API', function () {
     mockApp.emit('N2KAnalyzerOut', {
       pgn: 126720,
       fields: {
-        'Sub-command': 254,
+        'Command': 254,
         'Message Type': 2,
         'Timer Data Type': 5,
         'Timer Value': 600000,
