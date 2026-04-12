@@ -10,6 +10,7 @@ jobs:
     permissions:
       contents: write
       id-token: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v6
 
@@ -31,13 +32,18 @@ jobs:
 
       - run: npm publish --provenance --access public
 
-      - name: Commit version bump
-        continue-on-error: true
+      - name: Version bump PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REF_NAME: ${{ github.event.release.tag_name }}
         run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          BRANCH="version-bump/$VERSION"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add package.json
-          git commit -m "v${GITHUB_REF_NAME#v}"
-          git push origin HEAD:main
-        env:
-          GITHUB_REF_NAME: ${{ github.event.release.tag_name }}
+          git checkout -b "$BRANCH"
+          git add package.json package-lock.json
+          git commit -m "v$VERSION"
+          git push origin "$BRANCH"
+          gh pr create --title "v$VERSION" --body "Automated version bump after npm publish." --base main --head "$BRANCH"
+          gh pr merge "$BRANCH" --auto --squash
