@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@canboat/canboatjs": "^3.3.0",
-    "@types/node": "^24.12.2",
+    "@types/node": "^25.6.0",
     "chai": "^6.2.2",
     "mocha": "^11.7.5",
     "typescript": "^6.0.2"
