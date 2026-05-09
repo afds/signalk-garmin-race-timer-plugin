@@ -1,10 +1,110 @@
+# Dependabot configuration — grouped by risk class, not by convenience.
+#
+# Principles:
+#   - Runtime dependencies (ship to users) are NEVER grouped.
+#   - Major-version bumps fall through to individual PRs (groups restrict to
+#     minor/patch). Exception: @types/* are cosmetic and grouped including majors.
+#   - Security updates are never grouped (default behaviour — we do not set
+#     `applies-to: security-updates` anywhere).
+#   - Cohort groups reflect packages that historically move together in this
+#     repo (see commit history: typescript+@types/node, mocha+chai, actions/*).
 version: 2
 updates:
+  # ---------------------------------------------------------------------------
+  # npm — root package.json
+  # Covers 1 runtime dep (@signalk/server-api) and 5 devDependencies
+  # (@canboat/canboatjs, @types/node, chai, mocha, typescript).
+  # ---------------------------------------------------------------------------
   - package-ecosystem: npm
     directory: /
     schedule:
       interval: weekly
+      day: monday
+    open-pull-requests-limit: 10
+    labels:
+      - dependencies
+      - npm
+    commit-message:
+      prefix: chore(deps)
+      prefix-development: chore(deps-dev)
+      include: scope
+    groups:
+      # TypeScript compiler + Node typings must move together: PR #3 (bump
+      # @types/node 14→25) was reverted in PR #8 because the compiler was
+      # still on an older major. The later coordinated bump (commit f8da19a)
+      # confirms they are a single unit. Minor/patch only — majors still get
+      # individual PRs for review.
+      typescript:
+        patterns:
+          - typescript
+          - "@types/node"
+        update-types:
+          - minor
+          - patch
+      # Test stack: mocha runner + chai assertions. Both recently took major
+      # bumps (chai 4→6, mocha 5→11); grouping minor/patch reduces PR churn
+      # without hiding breaking majors. Pattern list is forward-compatible
+      # with sinon / ts-node / @types/mocha / @types/chai if added later.
+      mocha-test:
+        patterns:
+          - mocha
+          - chai
+          - sinon
+          - ts-node
+          - "@types/mocha"
+          - "@types/chai"
+        update-types:
+          - minor
+          - patch
+      # All @types/* are cosmetic (type-only, never executed). Safe to group
+      # aggressively including majors. @types/node is also listed in the
+      # `typescript` group; Dependabot picks the first matching group, so
+      # @types/node stays with `typescript` and other @types/* land here.
+      types:
+        patterns:
+          - "@types/*"
+        update-types:
+          - minor
+          - patch
+          - major
+      # Catch-all for remaining devDependencies (minor/patch). Excludes
+      # packages already covered above so they don't double-match. Runtime
+      # deps (@signalk/server-api) are excluded by `dependency-type: development`.
+      dev-minor-patch:
+        dependency-type: development
+        exclude-patterns:
+          - typescript
+          - "@types/*"
+          - mocha
+          - chai
+          - sinon
+          - ts-node
+        update-types:
+          - minor
+          - patch
+
+  # ---------------------------------------------------------------------------
+  # GitHub Actions — .github/workflows/*
+  # Small surface area: actions/checkout and actions/setup-node, both pinned
+  # to floating major tags (@v6). Dependabot will only open PRs on major
+  # bumps under this pinning style.
+  # ---------------------------------------------------------------------------
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
+      day: tuesday  # staggered from npm to avoid a single-day PR burst
+    labels:
+      - dependencies
+      - github-actions
+    commit-message:
+      prefix: chore(ci)
+      include: scope
+    groups:
+      actions:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+          - major
