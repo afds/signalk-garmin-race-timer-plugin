@@ -27,7 +27,6 @@ updates:
     commit-message:
       prefix: chore(deps)
       prefix-development: chore(deps-dev)
-      include: scope
     groups:
       # TypeScript compiler + Node typings must move together: PR #3 (bump
       # @types/node 14→25) was reverted in PR #8 because the compiler was
@@ -43,16 +42,15 @@ updates:
           - patch
       # Test stack: mocha runner + chai assertions. Both recently took major
       # bumps (chai 4→6, mocha 5→11); grouping minor/patch reduces PR churn
-      # without hiding breaking majors. Pattern list is forward-compatible
-      # with sinon / ts-node / @types/mocha / @types/chai if added later.
+      # without hiding breaking majors. @types/mocha / @types/chai are
+      # intentionally NOT listed here — they belong to the `types` group so
+      # they can receive major bumps too.
       mocha-test:
         patterns:
           - mocha
           - chai
           - sinon
           - ts-node
-          - "@types/mocha"
-          - "@types/chai"
         update-types:
           - minor
           - patch
@@ -99,7 +97,6 @@ updates:
       - github-actions
     commit-message:
       prefix: chore(ci)
-      include: scope
     groups:
       actions:
         patterns:
