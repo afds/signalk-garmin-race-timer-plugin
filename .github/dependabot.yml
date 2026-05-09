@@ -8,6 +8,10 @@
 #     `applies-to: security-updates` anywhere).
 #   - Cohort groups reflect packages that historically move together in this
 #     repo (see commit history: typescript+@types/node, mocha+chai, actions/*).
+#
+# Commit-message prefixes use bare `chore` so Dependabot's auto-appended
+# scope (`(deps)`, `(deps-dev)`, `(github-actions)`) lands cleanly without
+# producing duplicated segments like `chore(deps)(deps): …`.
 version: 2
 updates:
   # ---------------------------------------------------------------------------
@@ -23,10 +27,9 @@ updates:
     open-pull-requests-limit: 10
     labels:
       - dependencies
-      - npm
     commit-message:
-      prefix: chore(deps)
-      prefix-development: chore(deps-dev)
+      prefix: chore
+      prefix-development: chore
     groups:
       # TypeScript compiler + Node typings must move together: PR #3 (bump
       # @types/node 14→25) was reverted in PR #8 because the compiler was
@@ -94,9 +97,8 @@ updates:
       day: tuesday  # staggered from npm to avoid a single-day PR burst
     labels:
       - dependencies
-      - github-actions
     commit-message:
-      prefix: chore(ci)
+      prefix: chore
     groups:
       actions:
         patterns:
